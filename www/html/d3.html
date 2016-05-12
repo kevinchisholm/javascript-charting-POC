@@ -4,17 +4,154 @@
         <meta charset="utf-8"> 
         <title>D3</title>
         <link rel="stylesheet" type="text/css" href="../css/reset.css">
-        <link rel="stylesheet" type="text/css" href="../css/index.css">       
+        <link rel="stylesheet" type="text/css" href="../css/index.css">
+        <style>
+        .axis {
+          font: 10px sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+        </style>
     </head>
-       
     <body>
         <div id="navContainer"></div>
         <article id="container">
             <section id="content">
                 <h1>D3</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque volutpat tellus velit, in facilisis leo porta et. Nam viverra lectus eget mi cursus, a blandit augue tincidunt. Fusce sodales lobortis tempus. Vestibulum justo nisl, tincidunt et finibus eget, egestas maximus lorem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur ut tellus vitae dui varius pulvinar. Ut et ultrices velit. Praesent nec venenatis nisl. Etiam eu posuere mi. Phasellus eget bibendum elit, in ullamcorper magna. Pellentesque varius, nibh sed molestie laoreet, nibh mi iaculis massa, eu condimentum neque augue vel felis. Suspendisse id metus nulla. Aenean porttitor, justo id rutrum cursus, mi metus iaculis urna, sed ultrices massa nisl lobortis nisi. Phasellus mollis dignissim erat vel feugiat.
-                </p>
+                <div class="chart"></div>
+                <script src="http://d3js.org/d3.v3.min.js"></script>
+                <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+                <script>
+                var jsonData_OLD = [{
+                    "date": "2013-01-01T05:00:00.000Z",
+                    "value": 53
+                }, {
+                    "date": "2013-02-01T05:00:00.000Z",
+                    "value": 165
+                }, {
+                    "date": "2013-03-01T05:00:00.000Z",
+                    "value": 269
+                }, {
+                    "date": "2013-04-01T04:00:00.000Z",
+                    "value": 344
+                }, {
+                    "date": "2013-05-01T04:00:00.000Z",
+                    "value": 376
+                }, {
+                    "date": "2013-06-01T04:00:00.000Z",
+                    "value": 410
+                }, {
+                    "date": "2013-07-01T04:00:00.000Z",
+                    "value": 421
+                }, {
+                    "date": "2013-08-01T04:00:00.000Z",
+                    "value": 405
+                }, {
+                    "date": "2013-09-01T04:00:00.000Z",
+                    "value": 376
+                }, {
+                    "date": "2013-10-01T04:00:00.000Z",
+                    "value": 359
+                }, {
+                    "date": "2013-11-01T04:00:00.000Z",
+                    "value": 392
+                }, {
+                    "date": "2013-12-01T05:00:00.000Z",
+                    "value": 433
+                }, {
+                    "date": "2014-01-01T05:00:00.000Z",
+                    "value": 455
+                }, {
+                    "date": "2014-02-01T05:00:00.000Z",
+                    "value": 478
+                }];
+
+                var margin = {top: 20, right: 20, bottom: 70, left: 40},
+                    width = 600 - margin.left - margin.right,
+                    height = 300 - margin.top - margin.bottom;
+
+                // Parse the date / time
+                var parseDate = d3.time.format("%Y-%m").parse;
+
+                var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+                var y = d3.scale.linear().range([height, 0]);
+
+                var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom")
+                    .tickFormat(d3.time.format("%Y-%m"));
+
+                var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left")
+                    .ticks(10);
+
+                var svg = d3.select("body").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                    .attr("transform", 
+                          "translate(" + margin.left + "," + margin.top + ")");
+
+                d3.csv("bar-data.csv", function(error, data) {
+
+                    console.warn('DATA ->');
+                    console.log('jsonData_OLD.length -> ' + jsonData_OLD.length);
+                    console.warn('data.length -> ' + data.length);
+
+                    var jsonData = jsonData_OLD;
+
+                    console.dir({DATA: data});
+                    console.dir({jsonData: jsonData});
+
+                    return;
+
+                    jsonData.forEach(function(d) {
+                        d.date = parseDate(d.date);
+                        d.value = +d.value;
+                    });
+                    
+                  x.domain(jsonData.map(function(d) { return d.date; }));
+                  y.domain([0, d3.max(jsonData, function(d) { return d.value; })]);
+
+                  svg.append("g")
+                      .attr("class", "x axis")
+                      .attr("transform", "translate(0," + height + ")")
+                      .call(xAxis)
+                    .selectAll("text")
+                      .style("text-anchor", "end")
+                      .attr("dx", "-.8em")
+                      .attr("dy", "-.55em")
+                      .attr("transform", "rotate(-90)" );
+
+                  svg.append("g")
+                      .attr("class", "y axis")
+                      .call(yAxis)
+                    .append("text")
+                      .attr("transform", "rotate(-90)")
+                      .attr("y", 6)
+                      .attr("dy", ".71em")
+                      .style("text-anchor", "end")
+                      .text("Value ($)");
+
+                  svg.selectAll("bar")
+                      .data(jsonData)
+                    .enter().append("rect")
+                      .style("fill", "steelblue")
+                      .attr("x", function(d) { return x(d.date); })
+                      .attr("width", x.rangeBand())
+                      .attr("y", function(d) { return y(d.value); })
+                      .attr("height", function(d) { return height - y(d.value); });
+                });
+
+
+                </script>
             </section>
         </article>
         <script src="../js/jquery-1.11.3.min.js"></script>

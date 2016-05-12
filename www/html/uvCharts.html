@@ -1,0 +1,113 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <title>D3</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+        <link rel="stylesheet" type="text/css" href="../css/index.css">
+        <style>
+
+        .uv-frame{
+          width: 100%!important;
+          outline: 1px solid red;
+        }
+        </style>
+    </head>
+       
+    <body>
+        <div id="navContainer"></div>
+        <article id="container">
+            <section id="content">
+                <h1>uvCharts</h1>
+             <!--Div that will hold the pie chart-->
+                <div id="uv-div"></div>
+            </section>
+        </article>
+       <script src="../js/jquery-1.11.3.min.js"></script>
+        <script src="../js/index.js"></script>
+        <!--Load the AJAX API-->
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
+        <script src="../js/uvcharts.full.min.js"></script>
+        <script type="text/javascript">
+          //var chartObject = uv.chart(chartType, graphDefinition, optionalConfiguration);
+
+        var graphdef = {
+            categories : ['uvCharts', 'matisse', 'bot-bot', 'SocialByWay'],
+            dataset : {
+                'uvCharts' : [
+                    { name : '2009', value : 32 },
+                    { name : '2010', value : 60 },
+                    { name : '2011', value : 97 },
+                    { name : '2012', value : 560 },
+                    { name : '2013', value : 999 }
+                ],
+
+                'matisse' : [
+                    { name : '2009', value : 58 },
+                    { name : '2010', value : 75 },
+                    { name : '2011', value : 90 },
+                    { name : '2012', value : 740 },
+                    { name : '2013', value : 890 }      
+                ],
+
+                'bot-bot' : [
+                    { name : '2009', value : 43 },
+                    { name : '2010', value : 88 },
+                    { name : '2011', value : 100 },
+                    { name : '2012', value : 420 },
+                    { name : '2013', value : 769 }  
+                ],
+
+                'SocialByWay' : [
+                    { name : '2009', value : 88 },
+                    { name : '2010', value : 120 },
+                    { name : '2011', value : 157 },
+                    { name : '2012', value : 450 },
+                    { name : '2013', value : 1024 } 
+                ],
+
+                'WaveMaker' : [
+                    { name : '2009', value : 32 },
+                    { name : '2010', value : 60 },
+                    { name : '2011', value : 97 },
+                    { name : '2012', value : 560 },
+                    { name : '2013', value : 999 }  
+                ]
+            }
+        }
+
+          // var graphdef = {
+          //     categories : ['uvCharts'],
+          //     dataset : {
+          //         'uvCharts' : [
+          //             { name : '2009', value : 32 },
+          //             { name : '2010', value : 60 },
+          //             { name : '2011', value : 97 },
+          //             { name : '2012', value : 560 },
+          //             { name : '2013', value : 999 }
+          //         ]
+          //     }
+          // }
+
+          // var chart = uv.chart('Bar', graphdef);
+          // var chart = uv.chart('Line', graphdef);
+          // var chart = uv.chart('Area', graphdef);
+          // var chart = uv.chart('StackedBar', graphdef);
+
+          var chart = uv.chart ('Bar', graphdef, {
+              meta : {
+                  caption : 'Usage over years',
+                  subcaption : 'among Imaginea OS products',
+                  hlabel : 'Years',
+                  vlabel : 'Number of users',
+                  vsublabel : 'in thousands'
+              }
+          });
+
+
+
+
+        </script>
+    </body> 
+</html>
