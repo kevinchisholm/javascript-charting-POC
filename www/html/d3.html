@@ -100,17 +100,7 @@
                           "translate(" + margin.left + "," + margin.top + ")");
 
                 d3.csv("bar-data.csv", function(error, data) {
-
-                    console.warn('DATA ->');
-                    console.log('jsonData_OLD.length -> ' + jsonData_OLD.length);
-                    console.warn('data.length -> ' + data.length);
-
-                    var jsonData = jsonData_OLD;
-
-                    console.dir({DATA: data});
-                    console.dir({jsonData: jsonData});
-
-                    return;
+                    var jsonData = data;
 
                     jsonData.forEach(function(d) {
                         d.date = parseDate(d.date);
